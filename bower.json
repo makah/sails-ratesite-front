@@ -25,5 +25,14 @@
   },
   "devDependencies": {
     "angular-mocks": "~1.2.14"
+  },
+  
+  "overrides": {
+    "angular": {
+      "main": ["./angular.min.js"]
+    },
+    "bootstrap": {
+      "main": ["./dist/css/bootstrap.min.css"]
+    }
   }
 }
