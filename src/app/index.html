@@ -1,19 +1,38 @@
 <!DOCTYPE html>
-<html ng-app="ratesite">
-  <head>
-    <meta charset="utf-8"/>
-    <title>Rate Site</title>
-    <!-- inject:vendor:css -->
-    <!-- endinject -->
-    <!-- inject:css -->
-    <!-- endinject -->
-  </head>
-  <body>
-    <h1>Rate Site</h1>
+<html ng-app="rateSiteApp">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Rate Site</title>
+  <!-- inject:vendor:css -->
+  <!-- endinject -->
+  <!-- inject:css -->
+  <!-- endinject -->
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Rate Site</a>
+      </div>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#/signup"><span class="glyphicon glyphicon-user"></span>Sign Up</a></li>
+        <li><a href="#/login"><span class="glyphicon glyphicon-log-in"></span>Login</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
     <ng-view></ng-view>
-    <!-- inject:vendor:js -->
-    <!-- endinject -->
-    <!-- inject:js -->
-    <!-- endinject -->
-  </body>
+  </div>
+
+  <!-- inject:vendor:js -->
+  <!-- endinject -->
+
+  <!-- inject:js -->
+  <!-- endinject -->
+</body>
+
 </html>
