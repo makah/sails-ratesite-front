@@ -21,6 +21,8 @@ var htmlminOpts = {
   removeRedundantAttributes: true
 };
 
+var LIVE_RELOAD_PORT = 8082; //default port 35729 
+
 /**
  * JS Hint
  */
@@ -88,7 +90,7 @@ gulp.task('vendors', function () {
   var files = bowerFiles();
   var vendorJs = fileTypeFilter(files, 'js');
   var vendorCss = fileTypeFilter(files, 'css');
-  var q = new queue({objectMode: true});
+  var q = queue({objectMode: true});
   if (vendorJs.length) {
     q.queue(gulp.src(vendorJs).pipe(dist('js', 'vendors')));
   }
@@ -110,7 +112,7 @@ function index () {
     .pipe(g.inject(gulp.src(bowerFiles(), opt), {ignorePath: 'bower_components', starttag: '<!-- inject:vendor:{{ext}} -->'}))
     .pipe(g.inject(es.merge(appFiles(), cssFiles(opt)), {ignorePath: ['.tmp', 'src/app']}))
     .pipe(gulp.dest('./src/app/'))
-    .pipe(g.embedlr())
+    .pipe(g.embedlr({port: LIVE_RELOAD_PORT}))
     .pipe(gulp.dest('./.tmp/'))
     .pipe(livereload());
 }
@@ -138,7 +140,7 @@ gulp.task('dist', ['vendors', 'assets', 'styles-dist', 'scripts-dist'], function
  * Static file server
  */
 gulp.task('statics', g.serve({
-  port: 3000,
+  port: 8081,
   root: ['./.tmp', './.tmp/src/app', './src/app', './bower_components']
 }));
 
@@ -149,7 +151,7 @@ gulp.task('serve', ['watch']);
 gulp.task('watch', ['statics', 'default'], function () {
   isWatching = true;
   // Initiate livereload server:
-  g.livereload.listen();
+  g.livereload.listen(LIVE_RELOAD_PORT); 
   gulp.watch('./src/app/**/*.js', ['jshint']).on('change', function (evt) {
     if (evt.type !== 'changed') {
       gulp.start('index');
@@ -210,7 +212,7 @@ gulp.task('karma-conf', ['templates'], function () {
  * Test files
  */
 function testFiles() {
-  return new queue({objectMode: true})
+  return queue({objectMode: true})
     .queue(gulp.src(fileTypeFilter(bowerFiles(), 'js')))
     .queue(gulp.src('./bower_components/angular-mocks/angular-mocks.js'))
     .queue(appFiles())
