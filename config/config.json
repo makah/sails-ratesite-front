@@ -1,0 +1,7 @@
+{
+    "ports": {
+        "production": 8080,
+        "development": 8081,
+        "liveReload": 8082
+    }
+}

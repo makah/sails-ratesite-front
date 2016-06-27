@@ -1,3 +1,3 @@
 /* global angular */
 
-angular.module('rateSiteApp.authentication', ['vcRecaptcha']);
+angular.module('rateSiteApp.authentication', ['rateSiteApp.config','vcRecaptcha']);

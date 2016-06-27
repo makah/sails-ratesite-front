@@ -2,6 +2,7 @@
 'use strict';
 
 var gulp = require('gulp'),
+    gulpNgConfig = require('gulp-ng-config'),
     g = require('gulp-load-plugins')({lazy: false}),
     noop = g.util.noop,
     es = require('event-stream'),
@@ -11,7 +12,8 @@ var gulp = require('gulp'),
     lazypipe = require('lazypipe'),
     stylish = require('jshint-stylish'),
     bower = require('./bower'),
-    isWatching = false;
+    isWatching = false,
+    fs = require('fs');
 
 var htmlminOpts = {
   removeComments: true,
@@ -21,7 +23,7 @@ var htmlminOpts = {
   removeRedundantAttributes: true
 };
 
-var LIVE_RELOAD_PORT = 8082; //default port 35729 
+var settings = JSON.parse(fs.readFileSync('./config/config.json', 'utf8'));
 
 /**
  * JS Hint
@@ -104,6 +106,7 @@ gulp.task('vendors', function () {
  * Index
  */
 gulp.task('index', index);
+gulp.task('angularConstant', angularConstant);
 gulp.task('build-all', ['styles', 'templates'], index);
 
 function index () {
@@ -112,9 +115,15 @@ function index () {
     .pipe(g.inject(gulp.src(bowerFiles(), opt), {ignorePath: 'bower_components', starttag: '<!-- inject:vendor:{{ext}} -->'}))
     .pipe(g.inject(es.merge(appFiles(), cssFiles(opt)), {ignorePath: ['.tmp', 'src/app']}))
     .pipe(gulp.dest('./src/app/'))
-    .pipe(g.embedlr({port: LIVE_RELOAD_PORT}))
+    .pipe(g.embedlr({port: settings.ports.liveReload}))
     .pipe(gulp.dest('./.tmp/'))
     .pipe(livereload());
+}
+
+function angularConstant() {
+  return gulp.src('./config/angular.config.json')
+    .pipe(gulpNgConfig('rateSiteApp.config'))
+    .pipe(gulp.dest('./src/app/'));
 }
 
 /**
@@ -140,7 +149,7 @@ gulp.task('dist', ['vendors', 'assets', 'styles-dist', 'scripts-dist'], function
  * Static file server
  */
 gulp.task('statics', g.serve({
-  port: 8081,
+  port: settings.ports.development,
   root: ['./.tmp', './.tmp/src/app', './src/app', './bower_components']
 }));
 
@@ -151,7 +160,7 @@ gulp.task('serve', ['watch']);
 gulp.task('watch', ['statics', 'default'], function () {
   isWatching = true;
   // Initiate livereload server:
-  g.livereload.listen(LIVE_RELOAD_PORT); 
+  g.livereload.listen(settings.ports.liveReload); 
   gulp.watch('./src/app/**/*.js', ['jshint']).on('change', function (evt) {
     if (evt.type !== 'changed') {
       gulp.start('index');
@@ -173,7 +182,7 @@ gulp.task('watch', ['statics', 'default'], function () {
 /**
  * Default task
  */
-gulp.task('default', ['lint', 'build-all']);
+gulp.task('default', ['lint', 'build-all','angularConstant']);
 
 /**
  * Lint everything
