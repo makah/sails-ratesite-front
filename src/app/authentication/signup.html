@@ -1,3 +1,49 @@
-<div>
-    My Signup Page
+<div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <h1 class="panel-title">Signup</h1>
+        </div>
+        <form class="panel-body" name="signupForm" ng-submit="signup()">
+            <div class="form-horizontal">
+                <div ng-show="errMsg.length > 0" class="alert alert-danger">{{errMsg}}</div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="loginEmail" name="email" placeholder="Zion" ng-model="form.name" ng-required class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="email" class="col-sm-2 control-label">E-mail</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="loginEmail" name="email" placeholder="myEmail@me.com" ng-model="form.email" ng-required class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" id="password" name="password" ng-model="form.password" ng-required placeholder="hard password" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password" class="col-sm-2 control-label">Password</label>
+                    <div class="col-sm-10">
+                        <input type="password" id="passwordConfirmation" name="passwordConfirmation" ng-model="form.passwordConfirmation" ng-required placeholder="hard password again" class="form-control" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div vc-recaptcha key="googleKey" ng-model="form.recaptchaResponse"></div>
+                        <button type="submit" class="btn btn-success">Sign up</button>
+                        <a href="#/forgotPassword">forgot password</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                <input class="btn" style="background: #dd4b39; color: white;" type="submit" value="Sign up with Google">
+            </div>
+        </form>
+    </div>
 </div>
+</div>
+</div>
+
