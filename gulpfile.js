@@ -2,7 +2,6 @@
 'use strict';
 
 var gulp = require('gulp'),
-    gulpNgConfig = require('gulp-ng-config'),
     g = require('gulp-load-plugins')({lazy: false}),
     noop = g.util.noop,
     es = require('event-stream'),
@@ -122,7 +121,7 @@ function index () {
 
 function angularConstant() {
   return gulp.src('./config/angular.config.json')
-    .pipe(gulpNgConfig('rateSiteApp.config'))
+    .pipe(g.ngConfig('rateSiteApp.config'))
     .pipe(gulp.dest('./src/app/'));
 }
 
@@ -161,23 +160,21 @@ gulp.task('watch', ['statics', 'default'], function () {
   isWatching = true;
   // Initiate livereload server:
   g.livereload.listen(settings.ports.liveReload); 
-  gulp.watch('./src/app/**/*.js', ['jshint']).on('change', function (evt) {
-    if (evt.type !== 'changed') {
-      gulp.start('index');
-    } else {
-      g.livereload.changed(evt);
-    }
-  });
+  gulp.watch('./src/app/**/*.js', ['jshint']).on('change', evtChange);
   gulp.watch('./src/app/index.html', ['index']);
   gulp.watch(['./src/app/**/*.html', '!./src/app/index.html'], ['templates']);
-  gulp.watch(['./src/app/**/*.styl'], ['csslint']).on('change', function (evt) {
-    if (evt.type !== 'changed') {
-      gulp.start('index');
-    } else {
-      g.livereload.changed(evt);
-    }
-  });
+  gulp.watch(['./src/app/**/*.styl'], ['csslint']).on('change', evtChange);
 });
+
+
+function evtChange(evt) {
+  if (evt.type !== 'changed') {
+    gulp.start('index');
+  }
+  else {
+    g.livereload.changed(evt);
+  }
+}
 
 /**
  * Default task
